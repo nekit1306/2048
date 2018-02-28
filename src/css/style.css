@@ -1,0 +1,97 @@
+html,body {
+    height: 100%;
+}
+body{
+    font-family: Lato, sans-serif;
+    margin: 0;
+}
+
+.wrapper{
+    height: 100%;
+    width: 100%;
+    white-space: nowrap;
+    text-align: center;
+    background: #414141;
+}
+
+.wrapper:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.field{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.inner-field {
+    position: relative;
+    margin: 0 auto;
+}
+
+.title {
+    color: #ebebeb;
+    font-size: 55px;
+}
+p {
+    color: #ddd;
+}
+
+table{
+    margin: 0 auto;
+    padding: 10px;
+    background: #393737;
+    border-radius: 5px;
+    border-spacing: 10px;
+}
+
+table td{
+    width:90px;
+    height:90px;
+    background: #515151;
+    border-radius: 5px;
+}
+
+.square {
+    position: absolute;
+    width: 93px;
+    height: 93px;
+    background: #3f98dd;
+    color:#fff;
+    font-size: 45px;
+    font-weight:700;
+    line-height: 85px;
+    border-radius: 5px;
+    transform:scale(0.5);
+    opacity: 0;
+    transition: all 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.square.size-4 {
+    background: #dd6245;
+}
+.square.size-8 {
+    background: #44cfca;
+}
+.square.size-16 {
+    background: #3a3a3a;
+}
+.square.size-32 {
+    background: #dd2848;
+}
+.square.size-64 {
+    background: #dd6245;
+}
+.square.size-128 {
+    background: #dd6245;
+}
+.square.size-256 {
+    background: #dd6245;
+}
+
+.square.fadeIn {
+    transform: scale(1);
+    opacity: 1;
+}
