@@ -251,8 +251,11 @@ a:hover, a:focus, a:active {
 }
 
 .game-result .inner-wrapper {
+    position: absolute;
     display: inline-block;
-    transform: translateY(150px);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .game-result__title {

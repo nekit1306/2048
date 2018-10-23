@@ -272,7 +272,7 @@ Grid.prototype.moveTile = function(vector) {
     });
     if (self.isMoved) {
         self.HTMLRenderer.render(self.cells);
-        self.HTMLRenderer.setScore(self.score);
+        self.HTMLRenderer.setScore(self.score, localStorage.getItem('score'));
     }
 
 };
@@ -360,10 +360,11 @@ Tile.prototype.updateSize = function(size) {
 
 
 function HTMLRenderer() {
-    this.tileContainer    = document.querySelector(".tile-container");
-    this.scoreContainer   = document.querySelector('.score-container');
-    this.gameResult       = document.querySelector('.game-result');
-    this.gameResultTitle  = document.querySelector('.game-result__title');
+    this.tileContainer      = document.querySelector(".tile-container");
+    this.scoreContainer     = document.querySelector('.score-container');
+    this.bestScoreContainer = document.querySelector('.best-score-container');
+    this.gameResult         = document.querySelector('.game-result');
+    this.gameResultTitle    = document.querySelector('.game-result__title');
 }
 
 HTMLRenderer.prototype.addTile = function(tile) {
@@ -411,7 +412,7 @@ HTMLRenderer.prototype.gameReset = function() {
     while (this.tileContainer.firstChild) {
         this.tileContainer.removeChild(this.tileContainer.firstChild);
     }
-    this.setScore(0);
+    this.setScore(0, localStorage.getItem('score'));
 };
 
 HTMLRenderer.prototype.setGameOver = function(gameState) {
@@ -425,6 +426,12 @@ HTMLRenderer.prototype.setGameOver = function(gameState) {
     }, 1000);
 };
 
-HTMLRenderer.prototype.setScore = function(score) {
+HTMLRenderer.prototype.setScore = function(score, bestScore) {
     this.scoreContainer.innerHTML = "Score: " + score;
+    this.bestScoreContainer.innerHTML = "Best Score: " + bestScore;
+
+    if (score > bestScore) {
+        this.bestScoreContainer.innerHTML = "Best Score: " + score;
+        localStorage.setItem('score', score);
+    }
 };
