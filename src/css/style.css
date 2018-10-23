@@ -232,7 +232,7 @@ a:hover, a:focus, a:active {
 }
 
 .game-result {
-    visibility: hidden;
+    visibility: visible;
     position: absolute;
     top: 0;
     left: 0;
@@ -240,7 +240,7 @@ a:hover, a:focus, a:active {
     height: 100%;
     background: rgba(23, 23, 23, 0.9);
     z-index: 3;
-    opacity: 0;
+    opacity: 1;
     transition: all 0.3s ease;
 }
 
