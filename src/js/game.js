@@ -2,50 +2,59 @@
  * Created by Kasutaja on 06.10.2017.
  */
 
-
 function Game() {
-    this.Board = new Board();
-    this.HTMLActuator = new HTMLActuator();
-    this.allowMove = true;
+    this.Grid = new Grid();
+    this.HTMLRenderer = new HTMLRenderer();
+    this.keydownBind = this.handleKeyDown.bind(this);
 }
 
 Game.prototype.start = function() {
+    this.resetGame();
     this.initEvents();
-    this.squareCreate(true);
+    this.tileCreate(true);
+};
+
+Game.prototype.resetGame = function () {
+    this.HTMLRenderer.gameReset();
 };
 
 Game.prototype.initEvents = function() {
-    window.addEventListener('keydown', this.handleKeyDown.bind(this));
+    window.addEventListener('keydown', this.keydownBind);
 };
 
 Game.prototype.handleKeyDown = function(e) {
 
-    var self = this;
     var keyMap = {37: 'left', 39: 'right', 38: 'up', 40: 'down'};
 
-    if (keyMap[e.keyCode] && this.allowMove) {
-        this.allowMove = false;
+    if (keyMap[e.keyCode]) {
+        e.preventDefault();
 
         this.move(keyMap[e.keyCode]);
-        this.squareCreate(false);
-        this.checkMoves();
 
-        setTimeout(function() {
-            self.allowMove = true;
-        },100)
+        this.tileCreate(false);
+
+        if (this.checkWinner()) {
+            this.gameOver(0);
+            return;
+        }
+
+         if (!this.checkMoves()) {
+             this.gameOver(1);
+         }
     }
 };
 
-Game.prototype.squareCreate = function(firstTime) {
-    if (this.Board.hasEmptyCells() && this.Board.isMoved) {
+Game.prototype.tileCreate = function(firstMove) {
+    if (this.Grid.hasEmptyCells() && this.Grid.isMoved) {
 
-        var square = new Square(2, this.Board.generateRandomCell());
+        var tile = new Tile(2, this.Grid.generateRandomCell());
 
-        this.Board.insertSquare(square);
-        this.HTMLActuator.addSquare(square);
+        this.Grid.insertTile(tile);
+        this.HTMLRenderer.addTile(tile);
 
-        if (firstTime) this.squareCreate(false);
-
+        if (firstMove) {
+            this.tileCreate(false);
+        }
     }
 
 };
@@ -54,44 +63,77 @@ Game.prototype.move = function(d) {
 
     switch (d) {
         case 'left':
-            this.Board.moveSquare({x: -1, y: 0});
+            this.Grid.moveTile({x: -1, y: 0});
             break;
 
         case 'right':
-            this.Board.moveSquare({x: 1, y: 0});
+            this.Grid.moveTile({x: 1, y: 0});
             break;
 
         case 'up':
-            this.Board.moveSquare({x: 0, y: -1});
+            this.Grid.moveTile({x: 0, y: -1});
             break;
 
         case 'down':
-            this.Board.moveSquare({x: 0, y: 1});
+            this.Grid.moveTile({x: 0, y: 1});
             break;
     }
 
 };
 
 Game.prototype.checkMoves = function() {
-    if (!this.Board.hasEmptyCells() && !this.Board.hasMoves()) {
-        setTimeout(function(){
-            alert('game over');
-        },1000);
+    return !(!this.Grid.hasEmptyCells() && !this.Grid.hasMoves());
+};
+
+Game.prototype.checkWinner = function() {
+
+    var cells = this.Grid.cells;
+    var isWinner = false;
+
+    for(var r = 0; r < cells.length; r++) {
+        for (var c = 0; c < cells[r].length; c++) {
+            if (cells[r][c] && cells[r][c].size === 2048) {
+                isWinner = true;
+                break;
+            }
+        }
     }
+
+    return isWinner;
+};
+
+Game.prototype.gameOver = function(gameState) {
+    window.removeEventListener('keydown', this.keydownBind);
+    this.HTMLRenderer.setGameOver(gameState);
 };
 
 
 
-function Board() {
+function Grid() {
     this.rows = [0, 1, 2, 3];
     this.cols = [0, 1, 2, 3];
-    this.cells = [[null, null, null, null], [null, null, null, null], [null, null, null, null], [null, null, null, null]];
-    this.merged = [[null, null, null, null], [null, null, null, null], [null, null, null, null], [null, null, null, null]];
-    this.HTMLActuator = new HTMLActuator();
+    this.cells = this.generateCells();
+    this.merged = this.generateCells();
+    this.HTMLRenderer = new HTMLRenderer();
     this.isMoved = true;
+    this.score = 0;
 }
 
-Board.prototype.generateRandomCell = function() {
+Grid.prototype.generateCells = function () {
+
+    var emptyCells = [];
+
+    for(var r = 0; r < 4; r++) {
+        emptyCells[r] = [];
+        for (var c = 0; c < 4; c++) {
+            emptyCells[r][c] = null;
+        }
+    }
+
+    return emptyCells;
+};
+
+Grid.prototype.generateRandomCell = function() {
 
     do {
         var x = Math.floor(Math.random() * 4);
@@ -101,15 +143,15 @@ Board.prototype.generateRandomCell = function() {
     return {x: x, y: y};
 };
 
-Board.prototype.insertSquare = function(square) {
-    this.cells[square.x][square.y] = square;
+Grid.prototype.insertTile = function(tile) {
+    this.cells[tile.x][tile.y] = tile;
 };
 
-Board.prototype.addMerged = function(square) {
-    this.merged[square.x][square.y] = this.cells[square.x][square.y];
+Grid.prototype.addMerged = function(tile) {
+    this.merged[tile.x][tile.y] = this.cells[tile.x][tile.y];
 };
 
-Board.prototype.removeMerged = function() {
+Grid.prototype.removeMerged = function() {
     for (var i = 0; i < this.merged.length; i++) {
         for (var j = 0; j < this.merged[i].length; j++) {
             this.merged[i][j] = null;
@@ -117,15 +159,16 @@ Board.prototype.removeMerged = function() {
     }
 };
 
-Board.prototype.updateCell = function(square, tPos) {
-    this.cells[square.x][square.y] = null;
-    this.cells[tPos.x][tPos.y] = square;
+Grid.prototype.updateCell = function(tile, tPos) {
+    this.cells[tile.x][tile.y] = null;
+    this.cells[tPos.x][tPos.y] = tile;
 };
 
-Board.prototype.moveSquare = function(vector) {
+Grid.prototype.moveTile = function(vector) {
 
-    this.isMoved = false;
     var self = this;
+
+    self.isMoved = false;
 
     self.removeMerged();
 
@@ -136,25 +179,25 @@ Board.prototype.moveSquare = function(vector) {
         traverseY.forEach(function(r) {
             var currentCell = self.cells[c][r];
             if (currentCell) {
+                currentCell.savePrevPosition(self.cells[c][r].pos);
+
                 var targetPos = self.getTargetPos(vector, currentCell.pos);
                 var next = targetPos.prev;
 
                 if (self.cells[targetPos.next.x] &&
                     self.cells[targetPos.next.x][targetPos.next.y] &&
                     self.cells[targetPos.next.x][targetPos.next.y].size === currentCell.size &&
-                    self.merged[targetPos.next.x][targetPos.next.y] == null)
+                    self.merged[targetPos.next.x][targetPos.next.y] === null)
                 {
                     next = targetPos.next;
 
                     currentCell.updateSize(2* currentCell.size);
                     self.addMerged(next);
 
-                    self.HTMLActuator.setSize(currentCell.pos, currentCell.size);
-                    self.HTMLActuator.removeSquare(next);
+                    self.score = self.score + currentCell.size;
 
                 }
                 if (!self.hasEqualPos(currentCell.pos, next)) {
-                    self.HTMLActuator.move(currentCell.pos, next);
 
                     self.updateCell(currentCell, next);
                     currentCell.updatePos(next);
@@ -165,11 +208,14 @@ Board.prototype.moveSquare = function(vector) {
             }
         });
     });
-
+    if (self.isMoved) {
+        self.HTMLRenderer.render(self.cells);
+        self.HTMLRenderer.setScore(self.score);
+    }
 
 };
 
-Board.prototype.getTargetPos = function (v, cc) {
+Grid.prototype.getTargetPos = function (v, cc) {
 
     var prev = null;
     var next = {x: cc.x, y: cc.y};
@@ -185,24 +231,29 @@ Board.prototype.getTargetPos = function (v, cc) {
     }
 };
 
-Board.prototype.cellInBounds = function (next) {
+Grid.prototype.cellInBounds = function (next) {
     return next.x >= 0 && next.x < 4 &&
            next.y >= 0 && next.y < 4;
 };
 
-Board.prototype.cellIsAvailable = function (cell) {
+Grid.prototype.cellIsAvailable = function (cell) {
     return this.cells[cell.x][cell.y] == null;
 };
 
-Board.prototype.hasEmptyCells = function () {
-    return this.cells.filter(function(i){
-            return i.indexOf(null) > -1;
-        }).length > 0;
+Grid.prototype.hasEmptyCells = function () {
+    for (var r = 0; r < this.cells.length; r++) {
+        for (var i = 0; i < this.cells[r].length; i++) {
+            if (this.cells[r][i] === null) {
+                return true;
+            }
+        }
+    }
+    return false;
 };
 
-Board.prototype.hasMoves = function () {
+Grid.prototype.hasMoves = function () {
     for (var r = 0; r < this.cells.length; r++) {
-        for (var i = 0; i < this.cells[r].length-1; i++) {
+        for (var i = 0; i < this.cells[r].length; i++) {
             if ((i + 1) < 4 && this.cells[r][i].size === this.cells[r][i + 1].size ||
                 (r + 1) < 4 && this.cells[r][i].size === this.cells[r + 1][i].size)
             {
@@ -213,94 +264,105 @@ Board.prototype.hasMoves = function () {
     return false;
 };
 
-Board.prototype.hasEqualPos = function (firstPos, secondPos) {
+Grid.prototype.hasEqualPos = function (firstPos, secondPos) {
     return JSON.stringify(firstPos) === JSON.stringify(secondPos);
 };
 
 
 
 
-function Square(size, pos) {
+function Tile(size, pos) {
     this.size = size;
-    this.pos  = {x: pos.x, y: pos.y};
+    this.x = pos.x;
+    this.y = pos.y;
+    this.pos  = {x: this.x, y: this.y};
     this.previousPosition = null;
 }
 
-Square.prototype.updatePos = function(pos) {
-    this.pos  = {x: pos.x, y: pos.y};
+Tile.prototype.updatePos = function(pos) {
+    this.x = pos.x;
+    this.y = pos.y;
+    this.pos  = {x: this.x, y: this.y};
 };
 
 
-Square.prototype.savePrevPosition = function(pos) {
+Tile.prototype.savePrevPosition = function(pos) {
     this.previousPosition = {x: pos.x, y: pos.y};
 };
 
 
-Square.prototype.updateSize = function(s) {
-    this.size = s;
+Tile.prototype.updateSize = function(size) {
+    this.size = size;
 };
 
 
 
-
-function HTMLActuator() {
-    this.cell             = document.querySelectorAll("tr");
-    this.cellContainer    = document.querySelector(".inner-field");
+function HTMLRenderer() {
+    this.tileContainer    = document.querySelector(".tile-container");
+    this.scoreContainer   = document.querySelector('.score-container');
+    this.gameResult       = document.querySelector('.game-result');
+    this.gameResultTitle  = document.querySelector('.game-result__title');
 }
 
-HTMLActuator.prototype.addSquare = function(s) {
+HTMLRenderer.prototype.addTile = function(tile) {
 
-    var square = document.createElement('div');
-    square.innerHTML = s.size;
-    square.style.top = this.cell[s.y].children[s.x].offsetTop + 'px';
-    square.style.left = this.cell[s.y].children[s.x].offsetLeft + 'px';
-    square.classList = 'square size-2 x-' + s.x + ' y-' + s.y;
+    var currentPos  = tile.previousPosition || tile.pos;
+    var tileInner   = document.createElement("div");
+    var tileElement = document.createElement('div');
 
-    this.cellContainer.appendChild(square);
+    tileElement.classList = 'tile size-' + tile.size + ' x-' + currentPos.x + ' y-' + currentPos.y;
+    tileInner.classList = 'tile-inner';
+    tileInner.innerHTML = tile.size;
 
-    setTimeout(function() {
-        square.classList.add('fadeIn');
-    }, 10);
+    tileElement.appendChild(tileInner);
+
+    this.tileContainer.appendChild(tileElement);
+
+    if (!tile.previousPosition) {
+        tileElement.classList.add('fadeIn');
+    } else {
+        setTimeout(function () {
+            tileElement.classList = 'tile size-' + tile.size + ' x-' + tile.x + ' y-' + tile.y;
+        }, 20);
+    }
 };
 
-HTMLActuator.prototype.move = function(sPos,tPos) {
+HTMLRenderer.prototype.render = function(cells) {
 
-    var square = this.getNode(sPos);
-    console.log(square);
-    var classes = square.className.split(' ');
-
-    square.style.top  = this.cell[tPos.y].children[tPos.x].offsetTop + 'px';
-    square.style.left = this.cell[tPos.y].children[tPos.x].offsetLeft + 'px';
-    classes[2] = 'x-' + tPos.x;
-    classes[3] = 'y-' + tPos.y;
-    square.classList = classes.join(' ');
-
-};
-
-HTMLActuator.prototype.removeSquare = function(sPos) {
-
-    var square = this.getNode(sPos);
     var self = this;
 
-    square.classList.remove('fadeIn');
-    setTimeout(function(){self.cellContainer.removeChild(square);}, 100);
-};
+    while (this.tileContainer.firstChild) {
+        this.tileContainer.removeChild(this.tileContainer.firstChild);
+    }
 
-HTMLActuator.prototype.setSize = function(sPos, size) {
-
-    var square = this.getNode(sPos);
-    var classes = square.className.split(' ');
-
-    classes[1] = 'size-' + size;
-    square.classList = classes.join(' ');
-
-    square.innerHTML = size;
+    cells.forEach(function(cell) {
+        cell.forEach(function (tile) {
+            if (tile) {
+                self.addTile(tile)
+            }
+        });
+    });
 
 };
 
+HTMLRenderer.prototype.gameReset = function() {
+    while (this.tileContainer.firstChild) {
+        this.tileContainer.removeChild(this.tileContainer.firstChild);
+    }
+    this.setScore(0);
+};
 
-HTMLActuator.prototype.getNode = function(s) {
+HTMLRenderer.prototype.setGameOver = function(gameState) {
+    var self = this;
 
-    return document.querySelector(".square.fadeIn.x-" + s.x + '.y-' + s.y);
+    var innerText = gameState === 0 ? 'Congrats, You have won' : 'Game Over';
 
+    setTimeout(function () {
+        self.gameResult.classList.add('show-overlay');
+        self.gameResultTitle.innerHTML = innerText;
+    }, 1000);
+};
+
+HTMLRenderer.prototype.setScore = function(score) {
+    this.scoreContainer.innerHTML = "Score: " + score;
 };

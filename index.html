@@ -3,50 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <title>2048 Game</title>
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
     <link rel="stylesheet" href="src/css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
 </head>
 <body>
     <div class="wrapper">
-        <div class="field">
-            <h2 class="title">2048
-            </h2>
-            <p>Play 2048 Game Online <br>Join the numbers and get to the 2048 tile!</p>
-            <div class="inner-field">
-                <table class="table">
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </table>
+        <div class="main-overlay">
+            <div class="container">
+                <div class="menu-content">
+                    <div class="col-md-6 offset-md-3">
+                        <h1>2048: How to</h1>
+                        <p>2048 is a small puzzle game that ended up taking the world by storm in a very unexpected way.
+
+                            In this game, you move tiles on a 4x4 Grid. When two tiles with the same number touch, they merge and their value doubles. To win, you need to reach the coveted “2048” tile.</p>
+                        <br>
+                        <p>Use your <b>arrow keys</b> to move the tiles.</p>
+                        <p class="arrows-set">
+                            <i class="far fa-arrow-alt-circle-left"></i>
+                            <i class="far fa-arrow-alt-circle-up"></i>
+                            <i class="far fa-arrow-alt-circle-right"></i>
+                            <i class="far fa-arrow-alt-circle-down"></i>
+                        </p>
+                        <div class="sharing">
+                            <h2>Would like to Share?</h2>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A//ylc.surge.sh">
+                                <span class="fb fab fa-facebook-f fa-2x"></span>
+                            </a>
+                            <a href="https://twitter.com/home?status=http%3A//ylc.surge.sh">
+                                <span class="tw fab fa-twitter fa-2x"></span>
+                            </a>
+                            <a href="https://plus.google.com/share?url=http%3A//ylc.surge.sh">
+                                <span class="gp fab fa-google fa-2x"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="menu-wrapper">
+            <div class="round"></div>
+        </div>
+        <div class="header">
+            <div class="container">
+                <div class="menu-how-to">
+                    <div class="open-overlay">
+                        <a class="link-hover btn-open">
+                            <span>
+                                <i class="fas fa-question-circle"></i>
+                                <span>How to Play</span>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="hide-overlay">
+                        <a class="btn-hide">
+                            <span>
+                                <i class="far fa-arrow-alt-circle-left"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <a href="#" class="link-hover float-right">
+                    <i class="fab fa-github"></i>
+                    <span>View on Github</span>
+                </a>
+            </div>
+        </div>
+        <div class="main-wrapper">
+            <div class="container">
+                <div class="content-section">
+                    <div class="field">
+                        <h2 class="title">2048</h2>
+                        <p>Play 2048 Game Online <br>Join the numbers and get to the 2048 tile!</p>
+                        <div class="score-container">Score: 0</div>
+                        <div class="inner-field">
+                            <div class="game-result">
+                                <div class="inner-wrapper">
+                                    <h3 class="game-result__title"></h3>
+                                    <a class="game-result__new-game">
+                                        <span class="fas fa-redo-alt fa-2x"></span>
+                                    </a>
+                                </div>
+                            </div>
+                            <table class="table">
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <div class="tile-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="container">
+                <div class="divider"></div>
+                <p>Made with <i class="fas fa-heart"></i> by @nekit1306</p>
             </div>
         </div>
     </div>
 
+<script src="src/js/eventListeners.js"></script>
 <script src="src/js/game.js"></script>
 <script type="text/javascript">
     var game = new Game();
     game.start();
 </script>
+
 </body>
 </html>
