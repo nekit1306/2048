@@ -6,6 +6,11 @@ function Game() {
     this.Grid = new Grid();
     this.HTMLRenderer = new HTMLRenderer();
     this.keydownBind = this.handleKeyDown.bind(this);
+    this.touchStart = this.handleTouchStart.bind(this);
+    this.touchMove = this.handleTouchMove.bind(this);
+
+    this.xDown = null;
+    this.yDown = null;
 }
 
 Game.prototype.start = function() {
@@ -20,6 +25,8 @@ Game.prototype.resetGame = function () {
 
 Game.prototype.initEvents = function() {
     window.addEventListener('keydown', this.keydownBind);
+    document.getElementsByClassName('inner-field')[0].addEventListener('touchstart', this.touchStart);
+    document.getElementsByClassName('inner-field')[0].addEventListener('touchmove', this.touchMove);
 };
 
 Game.prototype.handleKeyDown = function(e) {
@@ -38,10 +45,64 @@ Game.prototype.handleKeyDown = function(e) {
             return;
         }
 
-         if (!this.checkMoves()) {
-             this.gameOver(1);
-         }
+        if (!this.checkMoves()) {
+            this.gameOver(1);
+        }
     }
+};
+
+
+Game.prototype.handleTouchStart = function(evt) {
+    console.log('touch');
+
+    this.xDown = evt.changedTouches[0].screenX;
+    this.yDown = evt.changedTouches[0].screenY;
+};
+
+Game.prototype.handleTouchMove = function(evt) {
+
+    console.log('moved');
+
+    if ( ! this.xDown || ! this.yDown ) {
+        return;
+    }
+
+    var xUp = evt.changedTouches[0].screenX;
+    var yUp = evt.changedTouches[0].screenY;
+
+    var xDiff = this.xDown - xUp;
+    var yDiff = this.yDown - yUp;
+
+    if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
+        if ( xDiff > 0 ) {
+            this.move('left');
+        } else {
+            /* right swipe */
+            this.move('right');
+        }
+    } else {
+        if ( yDiff > 0 ) {
+            /* up swipe */
+            this.move('up');
+        } else {
+            /* down swipe */
+            this.move('down');
+        }
+    }
+
+    this.tileCreate(false);
+
+    if (this.checkWinner()) {
+        this.gameOver(0);
+        return;
+    }
+
+    if (!this.checkMoves()) {
+        this.gameOver(1);
+    }
+    /* reset values */
+    this.xDown = null;
+    this.yDown = null;
 };
 
 Game.prototype.tileCreate = function(firstMove) {
