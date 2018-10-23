@@ -53,15 +53,12 @@ Game.prototype.handleKeyDown = function(e) {
 
 
 Game.prototype.handleTouchStart = function(evt) {
-    evt.preventDefault();
 
     this.xDown = evt.changedTouches[0].screenX;
     this.yDown = evt.changedTouches[0].screenY;
 };
 
 Game.prototype.handleTouchMove = function(evt) {
-
-    evt.preventDefault();
 
     if ( ! this.xDown || ! this.yDown ) {
         return;
