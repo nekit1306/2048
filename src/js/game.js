@@ -25,8 +25,8 @@ Game.prototype.resetGame = function () {
 
 Game.prototype.initEvents = function() {
     window.addEventListener('keydown', this.keydownBind);
-    document.getElementsByClassName('inner-field')[0].addEventListener('touchstart', this.touchStart);
-    document.getElementsByClassName('inner-field')[0].addEventListener('touchmove', this.touchMove);
+    document.getElementsByClassName('inner-field')[0].addEventListener('touchstart', this.touchStart, false);
+    document.getElementsByClassName('inner-field')[0].addEventListener('touchmove', this.touchMove, false);
 };
 
 Game.prototype.handleKeyDown = function(e) {
