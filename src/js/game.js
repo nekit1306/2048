@@ -166,8 +166,6 @@ Game.prototype.checkWinner = function() {
 
 Game.prototype.gameOver = function(gameState) {
     window.removeEventListener('keydown', this.keydownBind);
-    document.getElementsByClassName('inner-field')[0].removeEventListener('touchstart', this.touchStart);
-    document.getElementsByClassName('inner-field')[0].removeEventListener('touchmove', this.touchMove);
     this.HTMLRenderer.setGameOver(gameState);
 };
 
