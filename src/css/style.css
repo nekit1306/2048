@@ -394,13 +394,25 @@ table td {
     background: #dd2848;
 }
 .tile.size-64 .tile-inner {
-    background: #dd6245;
+    background: #7c53e1;
 }
 .tile.size-128 .tile-inner {
-    background: #dd6245;
+    background: #1e445c;
 }
 .tile.size-256 .tile-inner {
-    background: #dd6245;
+    background: #2cdd88;
+}
+
+.tile.size-512 .tile-inner {
+    background: #a5190e;
+}
+
+.tile.size-1024 .tile-inner {
+    background: #d9dd4a;
+}
+
+.tile.size-2048 .tile-inner {
+    background: #D4AF37;
 }
 
 .sharing {
