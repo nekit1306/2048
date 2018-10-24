@@ -91,6 +91,10 @@ Game.prototype.handleTouchMove = function(evt) {
         }
     }
 
+    /* reset values */
+    this.xDown = null;
+    this.yDown = null;
+
     this.tileCreate(false);
 
     if (this.checkWinner()) {
@@ -101,9 +105,6 @@ Game.prototype.handleTouchMove = function(evt) {
     if (!this.checkMoves()) {
         this.gameOver(1);
     }
-    /* reset values */
-    this.xDown = null;
-    this.yDown = null;
 };
 
 Game.prototype.tileCreate = function(firstMove) {
@@ -166,6 +167,8 @@ Game.prototype.checkWinner = function() {
 
 Game.prototype.gameOver = function(gameState) {
     window.removeEventListener('keydown', this.keydownBind);
+    document.getElementsByClassName('inner-field')[0].removeEventListener('touchstart', this.touchStart, false);
+    document.getElementsByClassName('inner-field')[0].removeEventListener('touchmove', this.touchMove, false);
     this.HTMLRenderer.setGameOver(gameState);
 };
 
