@@ -7,6 +7,7 @@ body {
     margin: 0;
     -webkit-transform: translate3d(0,0,0);
     color: #fff;
+    font-size: 16px;
 }
 
 a {
@@ -18,6 +19,10 @@ a {
 a:hover, a:focus, a:active {
     color: #1db954 !important;
     text-decoration: none;
+}
+
+.no-padding {
+    padding: 0 !important;
 }
 
 .arrows-set {
@@ -213,18 +218,27 @@ a:hover, a:focus, a:active {
     z-index: 3;
 }
 
-.score-container {
+.score, .score-best {
+    float: right;
     border-radius: 25px;
-    color: #1db954;
     right: -130px;
     top: 0;
     font-size: 22px;
-    margin-bottom: 10px;
+    margin: 5px 0 10px;
+    text-align: right;
+    line-height: 22px;
+}
+
+.score > div:first-child, .score-best > div:first-child {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1db954;
 }
 
 .field{
     display: inline-block;
     vertical-align: middle;
+    width: 414px;
 }
 
 .main-field {
@@ -267,6 +281,7 @@ a:hover, a:focus, a:active {
 }
 
 .game-result__title {
+    margin-top: 0;
     margin-bottom: 20px;
 }
 
@@ -282,12 +297,13 @@ a:hover, a:focus, a:active {
     cursor: pointer;
 }
 
-.title {
-    color: #ebebeb;
-    font-size: 55px;
-}
 p {
     color: #ddd;
+}
+
+.title h2 {
+    margin-top: 0;
+    font-size: 50px;
 }
 
 table{
@@ -299,7 +315,7 @@ table{
     border-top: 2px solid rgb(36,42,54);
 }
 
-table td {
+.table>tbody>tr>td {
     width:93px;
     height:93px;
     background: #2e3643;
@@ -506,7 +522,19 @@ table td {
 }
 
 @media only screen and (max-width: 768px) {
-    table td {
+    .title h2 {
+        font-size: 35px;
+    }
+    .score, .score-best {
+        float: left;
+        text-align: left;
+        margin-left: 0;
+        margin-right: 30px;
+    }
+    .field {
+        width: 322px;
+    }
+    .table>tbody>tr>td {
         width: 70px;
         height: 70px;
     }

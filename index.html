@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>2048 Game</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
     <link rel="stylesheet" href="src/css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
@@ -14,7 +15,7 @@
         <div class="main-overlay">
             <div class="container">
                 <div class="menu-content">
-                    <div class="col-md-6 offset-md-3">
+                    <div class="col-md-6 col-md-offset-3">
                         <h1>2048: How to</h1>
                         <p>2048 is a small puzzle game that ended up taking the world by storm in a very unexpected way.
 
@@ -66,7 +67,7 @@
                     </div>
                 </div>
 
-                <a href="#" class="link-hover float-right">
+                <a href="#" class="link-hover pull-right">
                     <i class="fab fa-github"></i>
                     <span>View on Github</span>
                 </a>
@@ -76,10 +77,22 @@
             <div class="container">
                 <div class="content-section">
                     <div class="field">
-                        <h2 class="title">2048</h2>
-                        <p>Play 2048 Game Online <br>Join the numbers and get to the 2048 tile!</p>
-                        <div class="score-container">Score: 0</div>
-                        <div class="best-score-container">Best Score: 0</div>
+                        <div class="title clearfix">
+                                <div class="col-md-9 text-left no-padding">
+                                    <h2>2048</h2>
+                                    <p>Play 2048 Game Online <br>Join the numbers and get to the 2048 tile!</p>
+                                </div>
+                                <div class="col-md-3 text-right no-padding">
+                                    <div class="score">
+                                        <div class="score__title">Score:</div>
+                                        <div class="score__record">0</div>
+                                    </div>
+                                    <div class="score-best">
+                                        <div class="score-best__title">Best score:</div>
+                                        <div class="score-best__record">0</div>
+                                    </div>
+                                </div>
+                        </div>
                         <div class="main-field">
                             <div class="game-result">
                                 <div class="inner-wrapper">

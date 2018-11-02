@@ -5,8 +5,8 @@
 
 function HTMLRenderer() {
     this.tileContainer      = document.querySelector(".tile-container");
-    this.scoreContainer     = document.querySelector('.score-container');
-    this.bestScoreContainer = document.querySelector('.best-score-container');
+    this.scoreContainer     = document.querySelector('.score__record');
+    this.bestScoreContainer = document.querySelector('.score-best__record');
     this.gameResult         = document.querySelector('.game-result');
     this.gameResultTitle    = document.querySelector('.game-result__title');
 }
@@ -72,12 +72,12 @@ HTMLRenderer.prototype.setGameOver = function(gameState) {
     }, 1000);
 };
 
-HTMLRenderer.prototype.updateScore  = function(score) {
-    this.scoreContainer.innerHTML = "Score: " + score;
+HTMLRenderer.prototype.updateScore = function(score) {
+    this.scoreContainer.innerHTML = score;
 };
 
-HTMLRenderer.prototype.updateBestScore  = function(score) {
-    this.bestScoreContainer.innerHTML = "Best score: " + score;
+HTMLRenderer.prototype.updateBestScore = function(score) {
+    this.bestScoreContainer.innerHTML = score;
 
     localStorage.setItem('score', score);
 };
